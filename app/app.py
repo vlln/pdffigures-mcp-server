@@ -85,7 +85,7 @@ async def extract_figures_from_pdf(pdf_url: str) -> dict:
 
 mcp_app = mcp.http_app(path="/")
 
-app = FastAPI(title="PDF Extraction API Server", lifespan=mcp_app.lifespan)
+app = FastAPI(title="PDF Extraction API Server", lifespan=mcp_app.lifespan, redirect_slashes=False)
 app.mount("/mcp", mcp_app)
 
 app.mount("/resources", StaticFiles(directory=OUTPUT_FOLDER), name="resources")
