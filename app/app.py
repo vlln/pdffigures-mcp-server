@@ -106,6 +106,7 @@ async def extract_figures(
     """
 
     if file and pdf_url:
+        logging.error("Cannot provide both 'file' and 'pdf_url'.")
         raise HTTPException(status_code=400, detail="Cannot provide both 'file' and 'pdf_url'.")
 
     file_path_to_process = None
@@ -124,18 +125,23 @@ async def extract_figures(
                 with open(file_path_to_process, "wb") as buffer:
                     buffer.write(response.content)
         except httpx.RequestError as e:
+            logging.error(f"Failed to download PDF from URL: {e}")
             raise HTTPException(status_code=400, detail=f"Failed to download PDF from URL: {e}")
         except httpx.HTTPStatusError as e:
+            logging.error(f"Failed to download PDF from URL: {e.response.status_code} - {e.response.text}")
             raise HTTPException(status_code=e.response.status_code, detail=f"Failed to download PDF from URL: {e}")
     elif file: # file upload
         if not file.filename:
+            logging.error("No selected file")
             raise HTTPException(status_code=400, detail="No selected file")
         original_filename_to_process = file.filename
         file_path_to_process = await save_uploaded_file(file, UPLOAD_FOLDER)
     else:
+        logging.error("Either 'file' or 'pdf_url' must be provided.")
         raise HTTPException(status_code=400, detail="Either 'file' or 'pdf_url' must be provided.")
 
     if not original_filename_to_process.lower().endswith('.pdf'):
+        logging.error("Only PDF files are allowed.")
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
 
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
@@ -147,6 +153,7 @@ async def extract_figures(
     )
 
     if "error" in response_content:
+        logging.error(f"Error during PDF extraction: {response_content['error']}")
         raise HTTPException(status_code=500, detail=response_content["error"])
     
     final_response = construct_full_urls(response_content, str(RESOURCE_BASE_URL))

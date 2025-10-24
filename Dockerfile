@@ -54,7 +54,7 @@ ENV OUTPUT_DIR=/app/output
 ENV SERVER_PORT=5001
 EXPOSE 5001
 
-ENV LOG_LEVEL='info'
+ENV LOG_LEVEL='INFO'
 
 # If deployed standalone, set this to the host IP
 # If deployed in Kubernetes, set this to the service name
