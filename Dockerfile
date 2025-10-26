@@ -49,7 +49,7 @@ ENV JAVA_HOME=/usr/lib/jvm/default-java
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 # ENV JAVA_OPTS="-Xmx12g"
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0"
-ENV OUTPUT_DIR=/app/output
+ENV OUTPUT_DIR=/app/outputs
 
 ENV SERVER_PORT=5001
 EXPOSE 5001
